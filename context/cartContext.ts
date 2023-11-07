@@ -11,7 +11,7 @@ export type CartContextPops = {
 };
 
 export type CartItemType = {
-  id: number;
+  id: string;
   category: string;
   description: string;
   image: string;

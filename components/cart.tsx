@@ -1,35 +1,34 @@
 "use client";
+
 import { useContext } from "react";
 import { CartContext } from "@/context/cartContext";
 import Image from "next/image";
 import { Button } from "./ui/button";
 export const Cart = () => {
+  
   const { isVisible, setIsVisible, cart } = useContext(CartContext);
+  console.log("THIS IS THE CART from cart component", cart);
 
   return (
     isVisible && (
       <div className="fixed top-0 right-0 h-full w-[360px] bg-yellow-50 px-4 py-8 z-50">
         <CartHeader setIsVisible={setIsVisible} />
         <div className="py-4 overflow-y-auto mt-8 ">
-          {cart.length != 0 ? (
+          {cart.length == 0 ? (
             <CartEmpty setIsVisible={setIsVisible} />
           ) : (
             <div className="w-full h-full">
               <div className=" flex flex-col space-y-4 max-h-80 overflow-y-auto">
-                <CarItem
-                  name="Product 1"
-                  price={100}
-                  brand="Brand 1"
-                  quantity={1}
-                  picture=""
-                />
-                <CarItem
-                  name="Product 1"
-                  price={100}
-                  brand="Brand 1"
-                  quantity={1}
-                  picture=""
-                />
+                {cart.map((item: any) => (
+                  <CarItem
+                    key={item.id}
+                    name={item.name}
+                    price={item.price}
+                    brand={item.brand}
+                    quantity={1}
+                    picture={item.image}
+                  />
+                ))}
               </div>
               <div className=" rounded-t-2xl bg-yellow-500 h-full left-0 right-0 top-2/3 absolute bottom-0 py-8 px-10">
                 <div className="flex justify-between text-lg px-4">
@@ -73,6 +72,7 @@ const CarItem = ({
   return (
     <div className="flex items-center justify-between">
       <div className="flex items-center space-x-2">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={
             "https://images.unsplash.com/photo-1649261191606-cb2496e97eee?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwcm9maWxlLXBhZ2V8NDR8fHxlbnwwfHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60"
@@ -150,7 +150,7 @@ const CartEmpty = ({
         className="h-auto "
       />
       <h1 className="text-center font-bold text-lg">
-        You're cart is now empty Consider adding some items to it
+        Your cart is now empty Consider adding some items to it
       </h1>
       <Button variant={"destructive"} onClick={() => setIsVisible(false)}>
         back to shop

@@ -1,4 +1,5 @@
 import { ProductCard } from "@/components/prooductCard";
+import { getProperDescription, getProperName } from "@/utils/strings";
 
 const PRODUCT_SERVICE_URL = "http://localhost:3007/products";
 
@@ -32,30 +33,18 @@ export default async function Products() {
         id="Projects"
         className="w-fit mx-auto grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 justify-items-center justify-center gap-y-20 gap-x-14 mt-10 mb-5"
       >
-        <ProductCard
-          name="Product 1"
-          price={100}
-          brand="Brand 1"
-          image=""
-          id=""
-          discount={10}
-        />
-        <ProductCard
-          name="Product 1"
-          price={100}
-          brand="Brand 1"
-          image=""
-          id=""
-          discount={10}
-        />
-        <ProductCard
-          name="Product 1"
-          price={100}
-          brand="Brand 1"
-          image=""
-          id=""
-          discount={10}
-        />
+        {products.map((product: any) => (
+          <ProductCard
+            key={product?.id}
+            title={getProperName(product?.title || "test")}
+            price={product?.price}
+            brand="brand test"
+            image={product?.image}
+            discount={product?.discount || 0}
+            id={product?.id}
+            description={getProperDescription(product?.description || "test")}
+          />
+        ))}
       </section>
     </div>
   );

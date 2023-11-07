@@ -1,33 +1,59 @@
-type ProductCardProps = {
-  name: string;
+"use client";
+
+import { CartContext } from "@/context/cartContext";
+import { useContext } from "react";
+
+type ProductCardType = {
+  title: string;
   price: number;
   image: string;
   brand: string;
   discount: number;
+  description: string;
+  quantity?: number;
   id: string;
 };
 
 export const ProductCard = ({
-  name,
+  title,
   price,
   image,
   brand,
   discount,
+  description,
   id,
-}: ProductCardProps) => {
+}: ProductCardType) => {
+  const { cart, setCart, setIsVisible } = useContext(CartContext);
+
+  const handleAddToCart = (item: ProductCardType) => {
+    setCart((prevCartItems) => [
+      ...prevCartItems,
+      {
+        title: item.title,
+        price: item.price,
+        image: item.image,
+        category: item.brand,
+        quantity: item.quantity || 1,
+        id: item.id,
+        description: item.description,
+      },
+    ]);
+    // console.log("THIS THE CART NOW", cart);
+  };
+
   return (
     <div className="w-80 bg-white shadow-md rounded-xl duration-500 hover:shadow-2xl">
-      <a href="#">
+      <div>
         {/* eslint-disable-next-line @next/next/no-img-element*/}
         <img
-          src="https://images.unsplash.com/photo-1649261191606-cb2496e97eee?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwcm9maWxlLXBhZ2V8NDR8fHxlbnwwfHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60"
+          src={image}
           alt="Product"
           className="h-64 w-80 object-cover rounded-t-xl"
         />
         <div className="px-4 py-3 w-72">
           <span className="text-gray-400 mr-3 uppercase text-xs">{brand}</span>
           <p className="text-lg font-bold text-black truncate block capitalize">
-            {name}
+            {title}
           </p>
           <div className="flex items-center">
             <p className="text-lg font-semibold text-black cursor-auto my-3">
@@ -36,7 +62,20 @@ export const ProductCard = ({
             <del>
               <p className="text-sm text-gray-600 cursor-auto ml-2">${price}</p>
             </del>
-            <div className="ml-auto font-extrabold text-lg">
+            <button
+              className="ml-auto font-extrabold text-lg hover:scale-105"
+              onClick={() =>
+                handleAddToCart({
+                  title,
+                  price,
+                  image,
+                  brand,
+                  discount,
+                  description,
+                  id,
+                })
+              }
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="20"
@@ -51,10 +90,10 @@ export const ProductCard = ({
                 />
                 <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1zm3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4h-3.5zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V5z" />
               </svg>
-            </div>
+            </button>
           </div>
         </div>
-      </a>
+      </div>
     </div>
   );
 };
