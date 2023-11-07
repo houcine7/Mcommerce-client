@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { Button } from "./ui/button";
+import Link from "next/link";
 
 export const Hero = () => {
   return (
@@ -24,7 +25,7 @@ export const Hero = () => {
         </h1>
         <div className="flex justify-start gap-4 mt-4">
           <Button className="bg-pink-500 hover:bg-pink-600" about="shop now">
-            Shop Now
+            <Link href={"/shop/products"}>Shop Now</Link>
           </Button>
           <Button variant={"outline"} className="bg-none">
             Learn More
