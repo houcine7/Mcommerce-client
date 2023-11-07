@@ -23,7 +23,7 @@ export const ProductCard = ({
   description,
   id,
 }: ProductCardType) => {
-  const { cart, setCart, setIsVisible } = useContext(CartContext);
+  const { setCart } = useContext(CartContext);
 
   const handleAddToCart = (item: ProductCardType) => {
     setCart((prevCartItems) => [

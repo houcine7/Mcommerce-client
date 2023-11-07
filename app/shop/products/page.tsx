@@ -35,13 +35,13 @@ export default async function Products() {
       >
         {products.map((product: any) => (
           <ProductCard
-            key={product?.id}
+            key={product?._id}
             title={getProperName(product?.title || "test")}
             price={product?.price}
             brand="brand test"
             image={product?.image}
             discount={product?.discount || 0}
-            id={product?.id}
+            id={product?._id}
             description={getProperDescription(product?.description || "test")}
           />
         ))}

@@ -1,14 +1,11 @@
 "use client";
 
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { CartContext } from "@/context/cartContext";
 import Image from "next/image";
 import { Button } from "./ui/button";
 export const Cart = () => {
-  
   const { isVisible, setIsVisible, cart } = useContext(CartContext);
-  console.log("THIS IS THE CART from cart component", cart);
-
   return (
     isVisible && (
       <div className="fixed top-0 right-0 h-full w-[360px] bg-yellow-50 px-4 py-8 z-50">
@@ -21,11 +18,12 @@ export const Cart = () => {
               <div className=" flex flex-col space-y-4 max-h-80 overflow-y-auto">
                 {cart.map((item: any) => (
                   <CarItem
+                    id={item.id}
                     key={item.id}
-                    name={item.name}
+                    name={item.title}
                     price={item.price}
-                    brand={item.brand}
-                    quantity={1}
+                    brand={"test brand"}
+                    quantity={item.quantity}
                     picture={item.image}
                   />
                 ))}
@@ -62,39 +60,82 @@ const CarItem = ({
   price,
   brand,
   quantity,
+  id,
 }: {
+  id: string;
   name: string;
   price: number;
   brand: string;
   quantity: number;
   picture: string;
 }) => {
+  const { setCart } = useContext(CartContext);
+
+  const incrementQuantity = () => {
+    setCart((prevCart) => {
+      return prevCart.map((item) => {
+        if (item.id === id) {
+          return {
+            ...item,
+            quantity: quantity + 1,
+          };
+        }
+        return item;
+      });
+    });
+  };
+
+  const decrementQuantity = () => {
+    if (quantity === 1) {
+      return;
+    } else {
+      setCart((prevCart) => {
+        return prevCart.map((item) => {
+          if (item.id === id) {
+            return {
+              ...item,
+              quantity: item.quantity - 1,
+            };
+          }
+          return item;
+        });
+      });
+    }
+  };
+
   return (
     <div className="flex items-center justify-between">
       <div className="flex items-center space-x-2">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src={
-            "https://images.unsplash.com/photo-1649261191606-cb2496e97eee?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwcm9maWxlLXBhZ2V8NDR8fHxlbnwwfHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60"
-          }
+          src={picture}
           alt={name}
           className="rounded-full w-11 h-11 object-cover object-center"
         />
         <div className="flex flex-col justify-center text-sm">
-          <p className="font-light">Name</p>
-          <p className="font-bold">Brand</p>
+          <p className="font-light">{name}</p>
+          <p className="font-bold"> {brand}</p>
         </div>
       </div>
 
       <div>
-        <p className="text-bold text-lg">Price</p>
+        <p className="text-bold text-lg">MAD{price}</p>
       </div>
       <div className="flex items-center">
-        <Button variant={"outline"} className="w-8 h-8 font-extrabold">
+        <Button
+          variant={"outline"}
+          className="w-8 h-8 font-extrabold"
+          onClick={incrementQuantity}
+        >
           +
         </Button>
-        <p className="mx-2">{22}</p>
-        <Button variant={"outline"} className="w-8 h-8 font-extrabold">
+        <p className="mx-2">{quantity}</p>
+        <Button
+          variant={"outline"}
+          className="w-8 h-8 font-extrabold"
+          aria-disabled={quantity == 0}
+          onClick={decrementQuantity}
+        >
           -
         </Button>
       </div>
