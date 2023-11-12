@@ -6,12 +6,16 @@ import { Alert } from "./alert";
 import { CarItem } from "./cartItem";
 import { CartNav } from "./cartNav";
 import { CartEmpty } from "./cartEmpty";
+import { useToast } from "./ui/use-toast";
+import { useRouter } from "next/navigation";
 
 const ORDERS_SERVICES_URL = "http://localhost:3002/orders";
 
 // Cart component
 export const Cart = () => {
+  const router = useRouter();
   const { isVisible, setIsVisible, cart } = useContext(CartContext);
+  const { toast } = useToast();
 
   const totalPrice = cart.reduce(
     (acc, item) => acc + item.price * item.quantity,
@@ -20,7 +24,6 @@ export const Cart = () => {
 
   useEffect(() => {
     return () => {
-      console.log("unmount");
       localStorage.removeItem("cart");
     };
   }, []);
@@ -50,16 +53,35 @@ export const Cart = () => {
         body: JSON.stringify(orderDto),
       });
 
-      const data = await response.json();
+      const { data } = await response.json();
       if (response.ok) {
-        console.log(data);
+        toast({
+          description: "Order saved successfully",
+          title: "Success",
+          variant: "destructive",
+          className: "bg-green-400 border-white shadow-lg",
+        });
         setIsVisible(false);
-      } else {
         console.log(data);
-        console.log(response);
+        // executes after 4 seconds
+        setTimeout(() => {
+          router.push(`/shop/payments/${data._id}`);
+        }, 4000);
+      } else {
+        toast({
+          description: data.message,
+          title: "Error",
+          variant: "destructive",
+          className: "bg-red-400 border-white shadow-lg",
+        });
       }
     } catch (err) {
-      console.log(err);
+      toast({
+        description: "something went wrong!! try again later",
+        title: "Error",
+        variant: "destructive",
+        className: "bg-red-400 border-white shadow-lg",
+      });
     }
   };
 

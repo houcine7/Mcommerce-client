@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { CartHeader } from "./cartHeaderIcon";
 
-export const Header = () => {
+export const Header = ({ isCartVisible }: { isCartVisible: boolean }) => {
   return (
     <header className="header w-full fi p-4 fixed top-0 left-0 right-0 z-50">
       <div className="flex justify-between itesm-cecnter w-full px-8 py-2 border-b-white border-b-[thin] shadow-lg bg-transparent ">
@@ -20,9 +20,7 @@ export const Header = () => {
             <li>Men's</li>
             <li>Women</li>
             <li>Electronics</li>
-            <li>
-              <CartHeader />
-            </li>
+            {isCartVisible && <CartHeader />}
           </ul>
         </div>
       </div>
