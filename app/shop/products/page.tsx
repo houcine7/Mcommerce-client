@@ -5,7 +5,7 @@ const PRODUCT_SERVICE_URL = "http://localhost:3007/products";
 
 const getProducts = async () => {
   const res = await fetch(PRODUCT_SERVICE_URL, {
-    cache: "force-cache", // this the default behavior of next can be removed
+    // cache: "force-cache", // this the default behavior of next can be removed
     next: {
       revalidate: 3600, //revalidate the data every hour
     },

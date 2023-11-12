@@ -1,15 +1,73 @@
 "use client";
 
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { CartContext } from "@/context/cartContext";
-import Image from "next/image";
-import { Button } from "./ui/button";
+import { Alert } from "./alert";
+import { CarItem } from "./cartItem";
+import { CartNav } from "./cartNav";
+import { CartEmpty } from "./cartEmpty";
+
+const ORDERS_SERVICES_URL = "http://localhost:3002/orders";
+
+// Cart component
 export const Cart = () => {
   const { isVisible, setIsVisible, cart } = useContext(CartContext);
+
+  const totalPrice = cart.reduce(
+    (acc, item) => acc + item.price * item.quantity,
+    0
+  );
+
+  useEffect(() => {
+    return () => {
+      console.log("unmount");
+      localStorage.removeItem("cart");
+    };
+  }, []);
+
+  const saveOrder = async () => {
+    const productsDto = cart.map((item) => {
+      return {
+        productId: item.id,
+        quantity: item.quantity,
+        unitPrice: item.price,
+        discount: 0,
+      };
+    });
+
+    const orderDto = {
+      products: productsDto,
+      createdAt: new Date(),
+      amount: totalPrice,
+    };
+
+    try {
+      const response = await fetch(ORDERS_SERVICES_URL, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify(orderDto),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        console.log(data);
+        setIsVisible(false);
+      } else {
+        console.log(data);
+        console.log(response);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     isVisible && (
       <div className="fixed top-0 right-0 h-full w-[360px] bg-yellow-50 px-4 py-8 z-50">
-        <CartHeader setIsVisible={setIsVisible} />
+        <CartNav setIsVisible={setIsVisible} />
+
         <div className="py-4 overflow-y-auto mt-8 ">
           {cart.length == 0 ? (
             <CartEmpty setIsVisible={setIsVisible} />
@@ -31,171 +89,23 @@ export const Cart = () => {
               <div className=" rounded-t-2xl bg-yellow-500 h-full left-0 right-0 top-2/3 absolute bottom-0 py-8 px-10">
                 <div className="flex justify-between text-lg px-4">
                   <p className="font-normal">Total price</p>
-                  <p className=" text-white font-extrabold">1000</p>
+                  <p className=" text-white font-extrabold">{totalPrice}</p>
                 </div>
                 <div className="flex justify-between text-lg px-4 mt-4">
                   <p className="font-normal">Discount</p>
-                  <p className=" text-white font-extrabold">10%</p>
+                  <p className=" text-white font-extrabold">0%</p>
                 </div>
                 <hr className="my-2" />
                 <div className="flex justify-between text-lg px-4 mt-4">
                   <p className="font-normal">To pay</p>
-                  <p className=" text-white font-extrabold">900</p>
+                  <p className=" text-white font-extrabold">{totalPrice}</p>
                 </div>
-                <Button className="bg-pink-600 hover:bg-pink-400 w-full mt-4">
-                  Create Order
-                </Button>
+                <Alert handleClick={saveOrder} />
               </div>
             </div>
           )}
         </div>
       </div>
     )
-  );
-};
-
-const CarItem = ({
-  name,
-  picture,
-  price,
-  brand,
-  quantity,
-  id,
-}: {
-  id: string;
-  name: string;
-  price: number;
-  brand: string;
-  quantity: number;
-  picture: string;
-}) => {
-  const { setCart } = useContext(CartContext);
-
-  const incrementQuantity = () => {
-    setCart((prevCart) => {
-      return prevCart.map((item) => {
-        if (item.id === id) {
-          return {
-            ...item,
-            quantity: quantity + 1,
-          };
-        }
-        return item;
-      });
-    });
-  };
-
-  const decrementQuantity = () => {
-    if (quantity === 1) {
-      return;
-    } else {
-      setCart((prevCart) => {
-        return prevCart.map((item) => {
-          if (item.id === id) {
-            return {
-              ...item,
-              quantity: item.quantity - 1,
-            };
-          }
-          return item;
-        });
-      });
-    }
-  };
-
-  return (
-    <div className="flex items-center justify-between">
-      <div className="flex items-center space-x-2">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={picture}
-          alt={name}
-          className="rounded-full w-11 h-11 object-cover object-center"
-        />
-        <div className="flex flex-col justify-center text-sm">
-          <p className="font-light">{name}</p>
-          <p className="font-bold"> {brand}</p>
-        </div>
-      </div>
-
-      <div>
-        <p className="text-bold text-lg">MAD{price}</p>
-      </div>
-      <div className="flex items-center">
-        <Button
-          variant={"outline"}
-          className="w-8 h-8 font-extrabold"
-          onClick={incrementQuantity}
-        >
-          +
-        </Button>
-        <p className="mx-2">{quantity}</p>
-        <Button
-          variant={"outline"}
-          className="w-8 h-8 font-extrabold"
-          aria-disabled={quantity == 0}
-          onClick={decrementQuantity}
-        >
-          -
-        </Button>
-      </div>
-    </div>
-  );
-};
-
-const CartHeader = ({
-  setIsVisible,
-}: {
-  setIsVisible: React.Dispatch<React.SetStateAction<boolean>>;
-}) => {
-  const closeCart = () => {
-    setIsVisible(false);
-  };
-
-  return (
-    <div className="flex justify-between items-center rounded-md border-yellow-400 border-[0.5px] p-1 px-4">
-      <button className="font-bold text-red-600 text-lg" onClick={closeCart}>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth={1.5}
-          stroke="currentColor"
-          className="w-6 h-6"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3"
-          />
-        </svg>
-      </button>
-      <h1 className="font-bold text-lg">Cart</h1>
-      <div className="font-bold text-lg">0</div>
-    </div>
-  );
-};
-
-const CartEmpty = ({
-  setIsVisible,
-}: {
-  setIsVisible: React.Dispatch<React.SetStateAction<boolean>>;
-}) => {
-  return (
-    <div className="flex items-center gap-8 flex-col mt-6">
-      <Image
-        src="/images/empty-cart.png"
-        alt="indicator"
-        width={300}
-        height={300}
-        className="h-auto "
-      />
-      <h1 className="text-center font-bold text-lg">
-        Your cart is now empty Consider adding some items to it
-      </h1>
-      <Button variant={"destructive"} onClick={() => setIsVisible(false)}>
-        back to shop
-      </Button>
-    </div>
   );
 };

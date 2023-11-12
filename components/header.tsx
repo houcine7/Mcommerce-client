@@ -1,16 +1,7 @@
-"use client";
 import Image from "next/image";
-import { CartIcon } from "./svg/Cart";
-import { useContext } from "react";
-import { CartContext } from "@/context/cartContext";
+import { CartHeader } from "./cartHeaderIcon";
 
 export const Header = () => {
-  const { setIsVisible } = useContext(CartContext);
-
-  const handelCartCLick = () => {
-    setIsVisible((prevVisibility) => !prevVisibility);
-  };
-
   return (
     <header className="header w-full fi p-4 fixed top-0 left-0 right-0 z-50">
       <div className="flex justify-between itesm-cecnter w-full px-8 py-2 border-b-white border-b-[thin] shadow-lg bg-transparent ">
@@ -29,10 +20,8 @@ export const Header = () => {
             <li>Men's</li>
             <li>Women</li>
             <li>Electronics</li>
-            <li onClick={handelCartCLick}>
-              <span className="inline-block cursor-pointer">
-                <CartIcon />
-              </span>
+            <li>
+              <CartHeader />
             </li>
           </ul>
         </div>

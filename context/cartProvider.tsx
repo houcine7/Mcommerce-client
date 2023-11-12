@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CartContext, CartContextPops, CartItemType } from "./cartContext";
 
 export const CartContextProvider = ({ children }: CartContextPops) => {
