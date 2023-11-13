@@ -1,7 +1,34 @@
+"use client";
 import { PaymentForm } from "@/components/paymentForm";
 import { PaymentPageHeader } from "@/components/paymentHeader";
+import { ProductItem } from "@/components/paymentProductItem";
+import { Loader } from "@/components/svg/Loader";
+import fetcher from "@/utils/fetcher";
+import { useParams, useRouter } from "next/navigation";
+import useSWR from "swr";
+
+const ORDERS_SERVICES_URL = `${process.env.NEXT_PUBLIC_ORDERS_SERVICE_URL}/orders`;
 
 export default function PaymentPage() {
+  const { orderId } = useParams();
+
+  const { data, isLoading, error } = useSWR(
+    `${ORDERS_SERVICES_URL}/${orderId}`,
+    fetcher
+  );
+
+  if (isLoading)
+    return (
+      <div>
+        <Loader />
+        Loading...
+      </div>
+    );
+
+  if (error) throw new Error(error);
+
+  console.log(data);
+
   return (
     <div className="mt-20 px-8">
       <PaymentPageHeader />
@@ -12,7 +39,14 @@ export default function PaymentPage() {
             Check your items. And select a suitable shipping method.
           </p>
           <div className="mt-8 space-y-3 rounded-lg border bg-white px-2 py-4 sm:px-6">
-            {/* Order items */}
+            {data.products.map((product) => (
+              <ProductItem
+                key={product.id}
+                image={product.image}
+                price={product.price}
+                title={product.title}
+              />
+            ))}
           </div>
           {/* Payment method */}
         </div>

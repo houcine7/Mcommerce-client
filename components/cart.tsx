@@ -9,7 +9,7 @@ import { CartEmpty } from "./cartEmpty";
 import { useToast } from "./ui/use-toast";
 import { useRouter } from "next/navigation";
 
-const ORDERS_SERVICES_URL = "http://localhost:3002/orders";
+const ORDERS_SERVICES_URL = `${process.env.NEXT_PUBLIC_ORDERS_SERVICE_URL}/orders`;
 
 // Cart component
 export const Cart = () => {

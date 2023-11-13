@@ -2,11 +2,10 @@
 import { ProductDetails } from "@/components/productDetails";
 import { Loader } from "@/components/svg/Loader";
 import { usePathname } from "next/navigation";
+import fetcher from "@/utils/fetcher";
 import useSWR from "swr";
 
-const PRODUCT_SERVICE_URL = "http://localhost:3007/products";
-
-const fetcher = (url: string) => fetch(url).then((res) => res.json());
+const PRODUCT_SERVICE_URL = `${process.env.NEXT_PUBLIC_PRODUCTS_SERVICE_URL}/products`;
 
 export default function ProductDetailsPage() {
   const path = usePathname();

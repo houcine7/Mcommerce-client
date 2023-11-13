@@ -1,7 +1,7 @@
 import { ProductCard } from "@/components/prooductCard";
 import { getProperDescription, getProperName } from "@/utils/strings";
 
-const PRODUCT_SERVICE_URL = "http://localhost:3007/products";
+const PRODUCT_SERVICE_URL = `${process.env.NEXT_PUBLIC_PRODUCTS_SERVICE_URL}/products`;
 
 const getProducts = async () => {
   const res = await fetch(PRODUCT_SERVICE_URL, {
