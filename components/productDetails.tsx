@@ -28,6 +28,7 @@ export const ProductDetails = ({
 
   const addToCart = () => {
     //
+    console.log(`the name is ${name}`);
     setCart((prevCart) => {
       const itemIndex = prevCart.findIndex((item) => item.id === id);
       if (itemIndex !== -1) {

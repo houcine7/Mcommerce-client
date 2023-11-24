@@ -1,24 +1,24 @@
 "use client";
 import { ProductDetails } from "@/components/productDetails";
 import { Loader } from "@/components/svg/Loader";
-import { usePathname } from "next/navigation";
+import { useParams } from "next/navigation";
 import fetcher from "@/utils/fetcher";
 import useSWR from "swr";
 
 const PRODUCT_SERVICE_URL = `${process.env.NEXT_PUBLIC_PRODUCTS_SERVICE_URL}/products`;
 
 export default function ProductDetailsPage() {
-  const path = usePathname();
-  const productId = path.split("/")[3];
+  const params = useParams();
 
   const { data, isLoading, error } = useSWR(
-    `${PRODUCT_SERVICE_URL}/${productId}`,
+    `${PRODUCT_SERVICE_URL}/${params.id}`,
     {
       fetcher,
     }
   );
 
   if (error) {
+    console.log(`error is ${error}`);
     throw new Error("Couldn't fetch resource");
   }
 

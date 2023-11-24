@@ -66,7 +66,7 @@ export const Cart = () => {
         // executes after 4 seconds
         setTimeout(() => {
           router.push(`/shop/payments/${data._id}`);
-        }, 4000);
+        }, 1000);
       } else {
         toast({
           description: data.message,
@@ -111,7 +111,9 @@ export const Cart = () => {
               <div className=" rounded-t-2xl bg-yellow-500 h-full left-0 right-0 top-2/3 absolute bottom-0 py-8 px-10">
                 <div className="flex justify-between text-lg px-4">
                   <p className="font-normal">Total price</p>
-                  <p className=" text-white font-extrabold">{totalPrice}</p>
+                  <p className=" text-white font-extrabold">
+                    {totalPrice.toFixed(2)}
+                  </p>
                 </div>
                 <div className="flex justify-between text-lg px-4 mt-4">
                   <p className="font-normal">Discount</p>
@@ -120,7 +122,9 @@ export const Cart = () => {
                 <hr className="my-2" />
                 <div className="flex justify-between text-lg px-4 mt-4">
                   <p className="font-normal">To pay</p>
-                  <p className=" text-white font-extrabold">{totalPrice}</p>
+                  <p className=" text-white font-extrabold">
+                    {totalPrice.toFixed(2)}
+                  </p>
                 </div>
                 <Alert handleClick={saveOrder} />
               </div>

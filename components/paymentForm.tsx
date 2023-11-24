@@ -1,8 +1,17 @@
+import submitPayment from "@/app/actions";
 import { Button } from "./ui/button";
+import { useParams } from "next/navigation";
+import FormSubmitBtn from "./FormSubmitBtn";
+import { useFormStatus } from "react-dom";
 
-export const PaymentForm = ({}) => {
+export const PaymentForm = ({ price }: { price: number }) => {
+  const { orderId } = useParams();
+  const { pending } = useFormStatus();
+
   return (
-    <>
+    <form action={submitPayment}>
+      <input type="hidden" name="price" value={price} />
+      <input type="hidden" name="orderId" value={orderId} />
       <div className="">
         <label htmlFor="email" className="mt-4 mb-2 block text-sm font-medium">
           Email
@@ -11,7 +20,7 @@ export const PaymentForm = ({}) => {
           <input
             type="text"
             id="email"
-            name="email"
+            name="userId"
             className="w-full rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
             placeholder="your.email@test.io"
           />
@@ -25,7 +34,7 @@ export const PaymentForm = ({}) => {
               strokeWidth="2"
             >
               <path
-                strokeliencap="round"
+                strokeLinecap="round"
                 strokeLinejoin="round"
                 d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"
               />
@@ -42,7 +51,7 @@ export const PaymentForm = ({}) => {
           <input
             type="text"
             id="card-holder"
-            name="card-holder"
+            name="cardHolder"
             className="w-full rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm uppercase shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
             placeholder="Your full name here"
           />
@@ -56,7 +65,7 @@ export const PaymentForm = ({}) => {
               strokeWidth="2"
             >
               <path
-                strokeliencap="round"
+                strokeLinecap="round"
                 strokeLinejoin="round"
                 d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5zm6-10.125a1.875 1.875 0 11-3.75 0 1.875 1.875 0 013.75 0zm1.294 6.336a6.721 6.721 0 01-3.17.789 6.721 6.721 0 01-3.168-.789 3.376 3.376 0 016.338 0z"
               />
@@ -64,7 +73,7 @@ export const PaymentForm = ({}) => {
           </div>
         </div>
         <label
-          htmlFor="card-no"
+          htmlFor="card-number"
           className="mt-4 mb-2 block text-sm font-medium"
         >
           Card Details
@@ -74,7 +83,7 @@ export const PaymentForm = ({}) => {
             <input
               type="text"
               id="card-no"
-              name="card-no"
+              name="cardNumber"
               className="w-full rounded-md border border-gray-200 px-2 py-3 pl-11 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
               placeholder="xxxx-xxxx-xxxx-xxxx"
             />
@@ -94,36 +103,19 @@ export const PaymentForm = ({}) => {
           </div>
           <input
             type="text"
-            name="credit-expiry"
+            name="creditExpiry"
             className="w-full rounded-md border border-gray-200 px-2 py-3 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
             placeholder="MM/YY"
           />
           <input
             type="text"
-            name="credit-cvc"
+            name="cardCvc"
             className="w-1/6 flex-shrink-0 rounded-md border border-gray-200 px-2 py-3 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
             placeholder="CVC"
           />
         </div>
-
-        <div className="mt-6 border-t border-b py-2">
-          <div className="flex items-center justify-between">
-            <p className="text-sm font-medium text-gray-900">Subtotal</p>
-            <p className="font-semibold text-gray-900">$399.00</p>
-          </div>
-          <div className="flex items-center justify-between">
-            <p className="text-sm font-medium text-gray-900">Shipping</p>
-            <p className="font-semibold text-gray-900">$8.00</p>
-          </div>
-        </div>
-        <div className="mt-6 flex items-center justify-between">
-          <p className="text-sm font-medium text-gray-900">Total</p>
-          <p className="text-2xl font-semibold text-gray-900">$408.00</p>
-        </div>
       </div>
-      <Button className="mt-4 mb-8 w-full rounded-md bg-gray-900 px-6 py-3 font-medium text-white">
-        Place Order
-      </Button>
-    </>
+      <FormSubmitBtn />
+    </form>
   );
 };

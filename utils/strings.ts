@@ -1,5 +1,5 @@
 export const getProperName = (name: string) => {
-  const splittedStr = name.split(" ");
+  const splittedStr = name?.split(" ");
 
   if (splittedStr.length >= 2) {
     const properName =
